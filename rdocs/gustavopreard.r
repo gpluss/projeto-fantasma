@@ -188,3 +188,60 @@ ggplot(Serie) +
   labs(x = "Temporadas", y = "Nota IMDB") +
   theme_estat()
 ggsave("boxplot_seasons.pdf", width = 158, height = 93, units = "mm")
+
+---------------------------------------------------------------------------------------------------------------
+  
+  #Top 3 terrenos mais frequentes pela ativação da armadilha
+  
+  #setting_terrain e trap_work_first
+  
+warner <- warner %>% 
+  filter(!is.na(trap_work_first))
+terreno <- warner$setting_terrain
+terreno
+factor_terreno <- factor(terreno)
+factor_terreno
+contagem_terreno <- table(terreno)
+contagem_terreno
+
+#Os terrenos mais frequente são "Urban", "Rural" e "Forest"
+
+terrenos <- warner %>% 
+  filter(setting_terrain %in% c("Urban", "Rural", "Forest"))
+
+terrenos <- warner %>%
+  mutate(setting_terrain = case_when(
+    setting_terrain %>% str_detect("Urban") ~ "Urbano",
+    setting_terrain %>% str_detect("Rural") ~ "Rural",
+    setting_terrain %>% str_detect("Forest") ~ "Floresta"
+  )) %>%
+  group_by(setting_terrain, trap_work_first) %>%
+  filter(!is.na(setting_terrain)) %>% 
+  filter(!is.na(trap_work_first)) %>% 
+  summarise(freq = n()) %>%
+  mutate(
+    freq_relativa = round(freq / sum(freq) * 100,1)
+  )
+
+porcentagens <- str_c(terrenos$freq_relativa, "%") %>% str_replace("
+\\.", ",")
+
+legendas <- str_squish(str_c(terrenos$freq, " (", porcentagens, ")"))
+
+colnames(terrenos)[colnames(terrenos) == "Armadilha funcionou de primeira"] <- "Armadilha_funcionou_de_primeira"
+
+ggplot(terrenos) +
+  aes(
+    x = fct_reorder(setting_terrain, freq, .desc = T), y = freq,
+    fill = Armadilha_funcionou_de_primeira, label = legendas
+  ) +
+  geom_col(position = position_dodge2(preserve = "single", padding =
+                                        0)) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, hjust = 0.5,
+    size = 3
+  ) +
+  labs(x = "Terreno", y = "Frequência") +
+  theme_estat()
+ggsave("analise3.pdf", width = 158, height = 93, units = "mm")
