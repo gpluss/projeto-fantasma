@@ -245,3 +245,20 @@ ggplot(terrenos) +
   labs(x = "Terreno", y = "Frequência") +
   theme_estat()
 ggsave("analise3.pdf", width = 158, height = 93, units = "mm")
+
+---------------------------------------------------------------------------------------------------------------
+
+#Análise 4 
+#Gráfico de dispersão
+
+ggplot(warner) +
+aes(x = engagement, y = imdb) +
+geom_point(colour = "#A11D21", size = 3) +
+labs(
+x = "Engajamento",
+y = "Notas IMDB"
+) +
+  theme_estat()
+ggsave("disp_pf.pdf", width = 158, height = 93, units = "mm")
+
+---------------------------------------------------------------------------------------------------------------
