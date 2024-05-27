@@ -128,7 +128,7 @@ quantile(First_Season$imdb, 0.25)
 median(First_Season$imdb)
 quantile(First_Season$imdb, 0.75)
 max(First_Season$imdb)
-
+round(var(First_Season$imdb), digits = 2)
 
 Second_Season <- Serie %>% 
   filter(season %in% c(2))
@@ -140,6 +140,7 @@ quantile(Second_Season$imdb, 0.25)
 median(Second_Season$imdb)
 quantile(Second_Season$imdb, 0.75)
 max(Second_Season$imdb)
+round(var(Second_Season$imdb), digits = 2)
 
 Third_Season <- Serie %>% 
   filter(season %in% c(3))
@@ -151,6 +152,7 @@ quantile(Third_Season$imdb, 0.25)
 median(Third_Season$imdb)
 quantile(Third_Season$imdb, 0.75)
 max(Third_Season$imdb)
+round(var(Third_Season$imdb), digits = 2)
 
 Fourth_Season <- Serie %>% 
   filter(season %in% c(4))
@@ -161,6 +163,7 @@ quantile(Fourth_Season$imdb, 0.25)
 median(Fourth_Season$imdb)
 quantile(Fourth_Season$imdb, 0.75)
 max(Fourth_Season$imdb)
+round(var(Fourth_Season$imdb), digits = 2)
 
 Quarta <- mean(Fourth_Season$imdb)
 
