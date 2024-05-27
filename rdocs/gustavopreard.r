@@ -264,4 +264,160 @@ y = "Notas IMDB"
   theme_estat()
 ggsave("disp_pf.pdf", width = 158, height = 93, units = "mm")
 
----------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Análise 5 Variação da nota de engajamento pelo personagem que conseguiu capturar o monstro
+
+# caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other
+
+# engagement
+
+Fred <- data.frame(warner$caught_fred, warner$engagement)
+Fred <- Fred %>% 
+   filter(warner.caught_fred == TRUE) %>% 
+  mutate(new_var = "Fred")
+Fred<- Fred %>% 
+  rename(warner.caught = warner.caught_fred)
+
+mr_Fred <- Fred %>%
+summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+ 
+Daphnie <- data.frame(warner$caught_daphnie, warner$engagement)
+Daphnie <- Daphnie %>% 
+   filter(warner.caught_daphnie == TRUE) %>% 
+  mutate(new_var = "Daphnie")
+Daphnie<- Daphnie %>% 
+  rename(warner.caught = warner.caught_daphnie)
+
+mr_Daphnie <- Daphnie %>%
+summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+
+Velma <- data.frame(warner$caught_velma, warner$engagement)
+Velma <- Velma %>% 
+   filter(warner.caught_velma == TRUE) %>% 
+  mutate(new_var = "Velma")
+Velma<- Velma %>% 
+  rename(warner.caught = warner.caught_velma)
+
+mr_Velma <- Velma %>%
+summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+
+
+Salsicha <- data.frame(warner$caught_shaggy, warner$engagement)
+Salsicha <- Salsicha %>% 
+   filter(warner.caught_shaggy == TRUE) %>% 
+  mutate(new_var = "Salsicha")
+Salsicha<- Salsicha %>% 
+  rename(warner.caught = warner.caught_shaggy)
+
+mr_Salsicha <- Salsicha %>%
+summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+
+Scooby <- data.frame(warner$caught_scooby, warner$engagement)
+Scooby <- Scooby %>% 
+   filter(warner.caught_scooby == TRUE) %>% 
+  mutate(new_var = "Scooby")
+Scooby<- Scooby %>% 
+  rename(warner.caught = warner.caught_scooby)
+
+mr_Scooby <- Scooby %>%
+summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+
+Outro <- data.frame(warner$caught_other, warner$engagement)
+Outro <- Outro %>% 
+   filter(warner.caught_other == TRUE) %>% 
+  mutate(new_var = "Outro")
+Outro<- Outro %>% 
+  rename(warner.caught = warner.caught_other)
+
+mr_Outro <- Outro %>%
+summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+
+Doo <- rbind(Fred, Daphnie, Velma, Salsicha, Scooby, Outro)
+Doo <- Doo %>% 
+  select(new_var, warner.caught, warner.engagement) %>%
+  rename(Personagens = new_var) %>% 
+  rename(Capturou = warner.caught) %>% 
+  rename(Engajamento = warner.engagement)
+
+quadro_mr <- rbind(mr_Daphnie, mr_Fred, mr_Outro, mr_Salsicha, mr_Scooby, mr_Velma)
+ 
+Doo <- Doo %>%
+  mutate(Personagens = fct_reorder(Personagens, Engajamento, .fun = mean, .desc = TRUE))
+
+?rbind
+
+#mutate
+
+#rbind
+
+ggplot(Doo) +
+aes(x = Personagens, y = Engajamento) +
+geom_boxplot(fill = c("#A11D21"), width = 0.5) +
+stat_summary(
+fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
+) +
+labs(x = "Personagens", y = "Engajamento") +
+theme_estat()
+ggsave("boxplot_a5.pdf", width = 158, height = 93, units = "mm")
+19
