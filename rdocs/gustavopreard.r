@@ -7,26 +7,6 @@ warner <- read_csv("banco/banco_final.csv")
 factor_format <- factor(warner$format, order = TRUE, c("Serie", "CrossOver", "Movie"))
 factor_format
 
-
-ggplot(warner) +
-  aes(x=date_aired, y=factor_format, group=1) +
-  geom_line(size=1,colour="#A11D21") + geom_point(colour="#A11D21",size=3) +
-  labs(x="Décadas", y="Formatos")
-
-ggplot(warner) +
-  aes(x = date_aired, y = format) +
-  geom_point(colour = "#A11D21", size = 2) +
-  labs(
-    x = "data",
-    y = "formato"
-  )
-
-ggplot(warner) +
-  aes(x = date_aired, y = factor_format, group = format, colour = format) +
-  geom_line(size = 1) +
-  geom_point(size = 2) +
-  labs(x = "Década", y = "Formato")
-
 view(mpg)
 
 estat_colors <- c(
@@ -58,57 +38,55 @@ theme_estat <- function(...) {
   )
 }
 
-trans_drv <- mpg %>%
-  mutate(trans = case_when(
-    trans %>% str_detect("auto") ~ "auto",
-    trans %>% str_detect("manual") ~ "manual"
-  )) %>%
-  group_by(trans, drv) %>%
+#Análise 1 Número de lançamentos a cada década por formato de lançamento
+
+```{r}
+
+aone <- data.frame(warner$date_aired, warner$format)
+
+aone$date_aired <- as.Date(aone$date_aired)
+aone <- aoneo %>%
+  mutate(ano = format(date_aired, "%Y"))
+aone$ano <- as.integer(aone$ano)
+aone$decada <- cut(aone$ano, breaks = c(1960, seq(1970, 2020, by = 10), Inf),
+                    labels = c("1960", "1970", "1980", "1990", "2000", "2010", "2020"))
+
+banco <- banco %>%
+  rename(tipos = format)
+
+aone <- aone %>%
+  mutate(warner.date_aired = case_when(
+    warner.date_aired %>% str_detect("196") ~ "1960",
+    warner.date_aired %>% str_detect("1970") ~ "1960",
+    warner.date_aired %>% str_detect("197") ~ "1970",
+    warner.date_aired %>% str_detect("198") ~ "1980",
+    warner.date_aired %>% str_detect("199") ~ "1990",
+    warner.date_aired %>% str_detect("200") ~ "2000",
+    warner.date_aired %>% str_detect("201") ~ "2010",
+    warner.date_aired %>% str_detect("202") ~ "2020"
+  )) %>% mutate(warner.format = case_when(
+    warner.format %>% str_detect("Serie") ~ "Série",
+    warner.format %>% str_detect("Movie") ~ "Filme",
+    warner.format %>% str_detect("CrossOver") ~ "CrossOver",
+     )) %>%
+  group_by(warner.date_aired,warner.format)
+  
+aone <- aone %>% 
   summarise(freq = n()) %>%
-  mutate(
-    freq_relativa = round(freq / sum(freq) * 100,1)
-  )
+mutate(
+freq_relativa = round(freq / sum(freq) * 100,1))
 
-warner$date_aired <- str_extract(warner$date_aired, "\\d{4}")
+aone<- aone %>% 
+  rename(warner.caught = warner.caught_fred)
 
-date_format <- warner %>%
-  mutate(format= case_when(
-    format %>% str_detect("CrossOver") ~ "CrossOver",
-    format %>% str_detect("Movie") ~ "Filme",
-    format %>% str_detect("Serie") ~ "Série"
-  )) %>%
-  group_by(date_aired, format) %>%
-  summarise(freq = n()) %>%
-  mutate(
-    freq_relativa = round(freq / sum(freq) * 100,1)
-  )
 
-date_format <- date_format %>%
-  mutate(format= case_when(
-    date_aired %>% str_detect("CrossOver") ~ "CrossOver",
-    format %>% str_detect("Movie") ~ "Filme",
-    format %>% str_detect("Serie") ~ "Série"
-  ))
-
-porcentagens <- str_c(date_format$freq_relativa, "%") %>% str_replace("\\.", ",")
-
-legendas <- str_squish(str_c(date_format$freq, " (", porcentagens, ")")
-)
-
-ggplot(date_format) +
-  aes(
-    x = date_aired, y = freq,
-    fill = format, label = date_aired
-  ) +
-  geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
-  geom_text(
-    position = position_dodge(width = 0.9),
-    vjust = -0.5, hjust = 0.5,
-    size = 3
-  ) +
-  labs(x = "Décadas", y = "Frequência") +
-  theme_estat()
-ggsave("colunas-ps.pdf", width = 158, height = 93, units = "mm")
+ggplot(aone) +
+aes(x = warner.date_aired, y = freq, group = warner.format, colour = warner.format) +
+geom_line(size = 1) +
+geom_point(size = 2) +
+labs(x = "Décadas", y = "Quantidade") +
+theme_estat()
+ggsave("linhas_aone.pdf", width = 158, height = 93, units = "mm")
 
 ---------------------------------------------------------------------------------------------------------------
   #Análise 2
