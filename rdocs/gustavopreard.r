@@ -44,16 +44,6 @@ theme_estat <- function(...) {
 
 aone <- data.frame(warner$date_aired, warner$format)
 
-aone$date_aired <- as.Date(aone$date_aired)
-aone <- aoneo %>%
-  mutate(ano = format(date_aired, "%Y"))
-aone$ano <- as.integer(aone$ano)
-aone$decada <- cut(aone$ano, breaks = c(1960, seq(1970, 2020, by = 10), Inf),
-                    labels = c("1960", "1970", "1980", "1990", "2000", "2010", "2020"))
-
-banco <- banco %>%
-  rename(tipos = format)
-
 aone <- aone %>%
   mutate(warner.date_aired = case_when(
     warner.date_aired %>% str_detect("196") ~ "1960",
@@ -230,7 +220,37 @@ ggsave("analise3.pdf", width = 158, height = 93, units = "mm")
 ---------------------------------------------------------------------------------------------------------------
 
 #Análise 4 
-#Gráfico de dispersão
+#Gráfico de dispersão e quadro de medidas resumo
+
+engagement_imdb <- data.frame(warner$imdb, warner$engagement)
+
+mr_imdb <- engagement_imdb %>%
+  summarize("Média" = round(mean((warner.imdb)),2),
+"Desvio Padrão" = round(sd((warner.imdb)),2),
+"Variância" = round(var((warner.imdb)),2),
+"Mínimo" = round(min((warner.imdb)),2),
+"1º Quartil" = round(quantile((warner.imdb), probs =
+.25),2),
+"Mediana" = round(quantile((warner.imdb), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.imdb), probs =
+.75),2),
+"Máximo" = round(max((warner.imdb)),2))
+
+mr_engagement <- engagement_imdb %>%
+  summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+
+mr_engagement_imdb <- rbind(mr_engagement, mr_imdb)
 
 ggplot(warner) +
 aes(x = engagement, y = imdb) +
@@ -393,7 +413,7 @@ ggplot(Doo) +
 aes(x = Personagens, y = Engajamento) +
 geom_boxplot(fill = c("#A11D21"), width = 0.5) +
 stat_summary(
-fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
+fun = "median", geom = "point", shape = 23, size = 3, fill = "white"
 ) +
 labs(x = "Personagens", y = "Engajamento") +
 theme_estat()
