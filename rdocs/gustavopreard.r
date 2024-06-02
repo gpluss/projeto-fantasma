@@ -391,14 +391,34 @@ summarize("Média" = round(mean((warner.engagement)),2),
 .75),2),
 "Máximo" = round(max((warner.engagement)),2))
 
-Doo <- rbind(Fred, Daphnie, Velma, Salsicha, Scooby, Outro)
+Nenhum <- data.frame(warner$caught_not, warner$engagement)
+Nenhum <- Nenhum %>% 
+   filter(warner.caught_not == TRUE) %>% 
+  mutate(new_var = "Nenhum")
+Nenhum<- Nenhum %>% 
+  rename(warner.caught = warner.caught_not)
+
+mr_Nenhum <- Nenhum %>%
+summarize("Média" = round(mean((warner.engagement)),2),
+"Desvio Padrão" = round(sd((warner.engagement)),2),
+"Variância" = round(var((warner.engagement)),2),
+"Mínimo" = round(min((warner.engagement)),2),
+"1º Quartil" = round(quantile((warner.engagement), probs =
+.25),2),
+"Mediana" = round(quantile((warner.engagement), probs = .5)
+,2),
+"3º Quartil" = round(quantile((warner.engagement), probs =
+.75),2),
+"Máximo" = round(max((warner.engagement)),2))
+
+Doo <- rbind(Fred, Daphnie, Velma, Salsicha, Scooby, Outro, Nenhum)
 Doo <- Doo %>% 
   select(new_var, warner.caught, warner.engagement) %>%
   rename(Personagens = new_var) %>% 
   rename(Capturou = warner.caught) %>% 
   rename(Engajamento = warner.engagement)
 
-quadro_mr <- rbind(mr_Daphnie, mr_Fred, mr_Outro, mr_Salsicha, mr_Scooby, mr_Velma)
+quadro_mr <- rbind(mr_Daphnie, mr_Fred, mr_Outro, mr_Salsicha, mr_Scooby, mr_Velma, mr_Nenhum)
  
 Doo <- Doo %>%
   mutate(Personagens = fct_reorder(Personagens, Engajamento, .fun = mean, .desc = TRUE))
